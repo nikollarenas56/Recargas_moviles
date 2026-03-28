@@ -8,7 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RechargesService } from './recharges.service';
-import { CreateRechargeDto } from './dto/create-recharge.dto';
+import { CreateRechargeDto } from '../application/dto/create-recharge.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 
