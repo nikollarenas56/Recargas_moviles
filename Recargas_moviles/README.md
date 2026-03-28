@@ -2,23 +2,44 @@
 
 API REST para gestión de recargas móviles construida con NestJS y TypeScript.
 
-## Stack Técnico
+## Librerías utilizadas
 
-- NestJS 10.x
+Framework y arquitectura:
+- NestJS 10.x (`@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `@nestjs/config`)
 - TypeScript 5.x
-- SQLite con TypeORM
-- JWT Authentication
-- class-validator para validaciones
 
-## Instalación
+Persistencia:
+- TypeORM (`typeorm`, `@nestjs/typeorm`)
+- SQLite (`sqlite3`)
+
+Autenticación y seguridad:
+- JWT (`@nestjs/jwt`)
+- Passport (`passport`, `passport-jwt`, `@nestjs/passport`)
+
+Validación:
+- `class-validator`
+- `class-transformer`
+
+Pruebas:
+- Jest (`jest`, `ts-jest`, `@nestjs/testing`)
+- Supertest (`supertest`)
+
+## Instrucciones de ejecución
+
+### Requisitos
+
+- Node.js 18 o superior
+- npm 9 o superior
+
+### Instalación
 
 ```bash
 npm install
 ```
 
-## Configuración
+### Configuración
 
-Crear archivo `.env` en la raíz:
+Crear archivo `.env` en la raíz con este contenido base:
 
 ```env
 PORT=3000
@@ -28,7 +49,7 @@ TEST_USERNAME=testuser
 TEST_PASSWORD=password123
 ```
 
-## Ejecución
+### Ejecución
 
 ```bash
 # Desarrollo
@@ -102,53 +123,66 @@ npm run test:cov
 npm run test:e2e
 ```
 
-### Automated Test Coverage
+### Cobertura de pruebas
 
-The project includes automated tests with Jest for:
+El proyecto incluye pruebas automatizadas con Jest para:
 
-- Unit tests for `AuthService`
-- Unit tests for `CreateRechargeUseCase`
-- Unit tests for domain rules in `PhoneNumber` and `Amount`
-- E2E tests for authentication and recharge endpoints
-- Success scenarios (2xx)
-- Client error scenarios (4xx)
-- Server error scenario (5xx)
+- Pruebas unitarias de `AuthService`
+- Pruebas unitarias de `CreateRechargeUseCase`
+- Reglas de dominio en `PhoneNumber` y `Amount`
+- Pruebas e2e de autenticación y recargas
+- Escenarios de éxito (2xx)
+- Escenarios de error del cliente (4xx)
+- Escenario de error del servidor (5xx)
 
-If PowerShell blocks `npm` scripts because of execution policy, run Jest directly:
+Resultados verificados:
+- Unitarias: 15/15 passing
+- E2E: 10/10 passing
+
+Si PowerShell bloquea scripts de `npm` por la política de ejecución, ejecuta Jest directamente:
 
 ```bash
 node node_modules/jest/bin/jest.js --runInBand
 node node_modules/jest/bin/jest.js --config test/jest-e2e.json --runInBand
 ```
 
-## Architecture Decisions
+## Justificación breve de las decisiones técnicas
 
-### Clean Architecture
-- **Controllers**: Handle HTTP requests and responses
-- **Services**: Contain business logic
-- **Repositories**: Database access through TypeORM
+- NestJS + TypeScript: estructura modular, mantenible y adecuada para un backend escalable.
+- SQLite + TypeORM: implementación rápida para la prueba técnica, con persistencia local simple y suficiente.
+- JWT: protección estándar para endpoints privados sin manejar sesión en servidor.
+- DDD + Event-Driven Design: separación clara entre dominio, aplicación e infraestructura para facilitar evolución del código.
+- Value Objects (`PhoneNumber`, `Amount`): reglas de negocio centralizadas y consistentes.
+- Unit tests + e2e: validan tanto lógica interna como comportamiento real de la API por HTTP.
 
-### Security
-- JWT tokens with configurable expiration
-- Password validation (minimum 6 characters)
-- Input validation on all endpoints
-- CORS enabled for frontend integration
+## Arquitectura y criterios técnicos
 
-### Validation
-- DTO-based validation using class-validator
-- Phone number validation (10 digits, starts with 3)
-- Amount validation (1000-100000 range)
+### Arquitectura limpia
+- **Controladores**: manejan peticiones y respuestas HTTP.
+- **Servicios**: concentran la lógica de negocio.
+- **Repositorios**: acceso a base de datos con TypeORM.
 
-### Error Handling
-- Global exception filter
-- Consistent error response format
-- HTTP status codes following REST conventions
+### Seguridad
+- Tokens JWT con expiración configurable.
+- Validación de contraseña (mínimo 6 caracteres).
+- Validación de entrada en todos los endpoints.
+- CORS habilitado para integración con frontend.
 
-## Database
+### Validación
+- Validación con DTO usando class-validator.
+- Validación de número celular (10 dígitos, inicia en 3).
+- Validación de monto (rango 1000-100000).
 
-The application uses SQLite for simplicity and portability. The database file `database.sqlite` is created automatically on first run.
+### Manejo de errores
+- Filtro global de excepciones.
+- Formato de error consistente.
+- Códigos HTTP siguiendo convenciones REST.
 
-### Entity: Transaction
+## Base de datos
+
+La aplicación usa SQLite por simplicidad y portabilidad. El archivo `database.sqlite` se crea automáticamente en la primera ejecución.
+
+### Entidad: Transaction
 ```typescript
 {
   id: string;           // UUID
@@ -159,32 +193,32 @@ The application uses SQLite for simplicity and portability. The database file `d
 }
 ```
 
-## Hardcoded Test User
+## Usuario de prueba
 
-For technical test purposes, the application includes a hardcoded user:
+Para la prueba técnica se incluye un usuario fijo:
 
 - **Username**: testuser
 - **Password**: password123
 
-In production, this would be replaced with proper user management and database-stored credentials with password hashing.
+En un entorno productivo, este usuario se reemplaza por gestión real de usuarios con contraseñas cifradas en base de datos.
 
-## Future Enhancements
+## Mejoras futuras
 
-- Integration with external recharge provider API
-- User registration and management
-- Transaction status tracking (pending, completed, failed)
-- Email notifications
-- Admin dashboard
-- Rate limiting
-- API documentation with Swagger
-- Unit and E2E test coverage
-- Docker containerization
-- CI/CD pipeline
+- Integración con proveedor externo de recargas.
+- Registro y gestión de usuarios.
+- Seguimiento de estado de transacciones (pendiente, completada, fallida).
+- Notificaciones por correo.
+- Panel administrativo.
+- Rate limiting.
+- Documentación de API con Swagger.
+- Mayor cobertura de pruebas unitarias y e2e.
+- Contenerización con Docker.
+- Pipeline CI/CD.
 
-## License
+## Licencia
 
 UNLICENSED - Private project
 
-## Author
+## Autor
 
 PuntoRed Development Team
