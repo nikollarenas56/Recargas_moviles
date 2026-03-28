@@ -89,13 +89,36 @@ Retorna el historial de transacciones del usuario autenticado.
 ## Tests
 
 ```bash
+# Unit tests
 npm test
+
+# Unit tests with watch mode
+npm run test:watch
+
+# Unit tests with coverage
+npm run test:cov
+
+# End-to-end tests
 npm run test:e2e
 ```
 
-### Test Coverage
+### Automated Test Coverage
+
+The project includes automated tests with Jest for:
+
+- Unit tests for `AuthService`
+- Unit tests for `CreateRechargeUseCase`
+- Unit tests for domain rules in `PhoneNumber` and `Amount`
+- E2E tests for authentication and recharge endpoints
+- Success scenarios (2xx)
+- Client error scenarios (4xx)
+- Server error scenario (5xx)
+
+If PowerShell blocks `npm` scripts because of execution policy, run Jest directly:
+
 ```bash
-npm run test:cov
+node node_modules/jest/bin/jest.js --runInBand
+node node_modules/jest/bin/jest.js --config test/jest-e2e.json --runInBand
 ```
 
 ## Architecture Decisions
