@@ -2,15 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { DomainEvent } from '../events/domain-event';
 
 /**
- * In-memory Event Bus implementation.
- * Implements the Observer pattern to handle domain events.
+ * Event Bus en memoria.
+ * Implementa patrón Observer para propagar eventos de dominio.
+ *
+ * Nota: en producción puede sustituirse por un broker (RabbitMQ/Kafka)
+ * manteniendo el mismo contrato de publicación/suscripción.
  */
 @Injectable()
 export class EventBus {
   private subscribers: Map<string, Array<(event: DomainEvent) => Promise<void>>> = new Map();
 
   /**
-   * Subscribe to domain events of a specific type.
+    * Registra un handler para un tipo de evento.
    */
   subscribe(
     eventName: string,
@@ -23,13 +26,13 @@ export class EventBus {
   }
 
   /**
-   * Publish a domain event to all subscribers.
+    * Publica un evento de dominio a todos los suscriptores.
    */
   async publish(event: DomainEvent): Promise<void> {
     const eventName = event.getEventName();
     const handlers = this.subscribers.get(eventName) || [];
 
-    // Execute all handlers in parallel
+    // Ejecuta handlers en paralelo para no bloquear el flujo principal.
     await Promise.all(
       handlers.map(handler => 
         handler(event).catch(error => 
@@ -40,7 +43,7 @@ export class EventBus {
   }
 
   /**
-   * Clear all subscribers (useful for testing).
+   * Limpia suscriptores (útil en pruebas).
    */
   clearSubscribers(): void {
     this.subscribers.clear();

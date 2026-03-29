@@ -8,6 +8,8 @@ interface User {
 
 @Injectable()
 export class UsersService {
+  // Usuario fijo para alcance de prueba técnica.
+  // Permite validar flujo de autenticación sin ampliar alcance a registro/gestión.
   private readonly hardcodedUser: User = {
     id: 1,
     username: process.env.TEST_USERNAME || 'testuser',
@@ -28,6 +30,7 @@ export class UsersService {
     username: string,
     password: string,
   ): Promise<User | null> {
+    // Comparación simple para el escenario de evaluación técnica.
     if (
       username === this.hardcodedUser.username &&
       password === this.hardcodedUser.password

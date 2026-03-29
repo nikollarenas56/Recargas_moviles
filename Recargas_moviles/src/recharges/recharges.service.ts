@@ -6,9 +6,10 @@ import { CreateRechargeUseCase } from '../application/use-cases/create-recharge.
 import { Transaction } from './entities/transaction.entity';
 
 /**
- * Recharges Service
- * Adapter that coordinates use cases and repositories.
- * Delegates business logic to application use cases.
+ * Servicio de recargas (capa de infraestructura/aplicación).
+ *
+ * - Usa casos de uso para lógica de negocio.
+ * - Usa repositorio solo para consultas de lectura específicas.
  */
 @Injectable()
 export class RechargesService {
@@ -22,11 +23,12 @@ export class RechargesService {
     createRechargeDto: CreateRechargeDto,
     userId: number,
   ): Promise<Transaction> {
-    // Delegate to use case which handles business logic and events
+    // El caso de uso concentra reglas de negocio y publicación de eventos.
     return await this.createRechargeUseCase.execute(createRechargeDto, userId);
   }
 
   async getHistory(userId: number): Promise<Transaction[]> {
+    // Historial del usuario autenticado, ordenado de más reciente a más antiguo.
     return this.transactionRepository.find({
       where: { userId },
       order: { createdAt: 'DESC' },
